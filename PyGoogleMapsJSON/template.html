@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <title>{{ title }}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+    <body>
+    	<table>
+    		<tr>
+    			<td align="center">
+    				<h1>{{ title }}</h1>
+    			</td>
+    		</tr>
+    		<tr>
+    			<td>
+			    	<div id="mapa" style="height: 500px; width: 700px">
+			        </div>
+			    </td>
+			</tr>
+		</table>
+        <script>
+        	var map;
+			var myLatlng;
+
+			function start() 
+			{
+			 	myLatlng=new google.maps.LatLng({{ x }},{{ y }});
+			 	var mapOptions={
+				    zoom: 20,
+				    center: myLatlng,
+        			mapTypeId: google.maps.MapTypeId.ROADMAP
+				};
+				map = new google.maps.Map(document.getElementById("mapa"), mapOptions);
+			}
+
+
+			function marker()
+			{
+				var contentString = '<h2>{{ title }}</h2>' ;//+'<p>Praça Rio Branco, Recife/PE.</p>' +'<a href="http://pt.wikipedia.org/wiki/Pra%C3%A7a_Rio_Branco_(Recife)" target="_blank">clique aqui para mais informações</a>';
+				var infowindow = new google.maps.InfoWindow({
+					content: contentString,
+					maxWidth: 700
+				});
+
+				var marcadorPersonalizado = new google.maps.Marker({
+					position: myLatlng,
+					map: map,
+					title: '{{ title }}'
+				});
+				 
+				google.maps.event.addListener(marcadorPersonalizado, 'click', function() {
+					infowindow.open(map,marcadorPersonalizado);
+				});
+				 
+			}		
+
+
+
+			function initialize()
+			{
+				start();
+				marker()
+			}			 
+				 
+			function loadScript() 
+			{
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyD4HeO5GgFS0X8AF9Jht_yvsygKP5X8UTU&sensor=true&callback=initialize";
+				document.body.appendChild(script);
+			}	 
+			window.onload = loadScript;
+        </script>
+    </body>
+</html>
